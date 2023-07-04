@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <>
       {arrayOfArraysForThreeGrid.map((arrayOfNineTrains) => (
-        <ThreeGrid key={arrayOfNineTrains[0].id}>
+        <ThreeGrid key={arrayOfNineTrains[0].name}>
           {arrayOfNineTrains.map((train) => (
             <button key="train.id" type="button">
               {train.name}
@@ -38,7 +38,7 @@ export default function Home() {
         </ThreeGrid>
       ))}
       {arrayOfArraysForFourGrid.map((arrayOfSixteenTrains) => (
-        <FourGrid key={arrayOfSixteenTrains[0].id}>
+        <FourGrid key={arrayOfSixteenTrains[0].name}>
           {arrayOfSixteenTrains.map((train) => (
             <button key="train.id" type="button">
               {train.name}
@@ -57,6 +57,10 @@ const ThreeGrid = styled.section`
   place-items: center;
   padding: 0.5rem;
   margin: 0.5rem;
+  border: 1px solid red;
+  border-radius: 5px;
+  background-color: lightgrey;
+  width: 100%;
 
   button {
     border: none;
@@ -65,6 +69,9 @@ const ThreeGrid = styled.section`
     color: white;
     height: 30vw;
     width: 30vw;
+    &:hover {
+      color: black;
+    }
   }
 `;
 
@@ -72,7 +79,7 @@ const FourGrid = styled(ThreeGrid)`
   grid-template: repeat(4, 1fr) / repeat(4, 1fr);
 
   button {
-    height: 25vw;
-    width: 25vw;
+    height: 22vw;
+    width: 22vw;
   }
 `;
