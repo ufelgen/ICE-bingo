@@ -23,26 +23,144 @@ export default function Home() {
     return chunks;
   }
 
-  const arrayOfArraysForThreeGrid = splitUpInChunks(trainsArrayFor3by3, 9);
-  const arrayOfArraysForFourGrid = splitUpInChunks(trainsArrayFor4by4, 16);
+  const arrayOfArraysForThreeGrid = splitUpInChunks(trainsArrayFor3by3, 3);
+  const finalArrayForThreeGrid = splitUpInChunks(arrayOfArraysForThreeGrid, 3);
+  const arrayOfArraysForFourGrid = splitUpInChunks(trainsArrayFor4by4, 4);
+  const finalArrayForFourGrid = splitUpInChunks(arrayOfArraysForFourGrid, 4);
+
+  //bingo code
+  const ROWS = 5;
+  const COLS = 5;
+  const MAX_NUM = 25;
+
+  //let currentPlayer = 1;
+  //let player1Card, player2Card;
+
+  function createBingoCard() {
+    const card = [];
+    const usedNumbers = new Set();
+
+    while (usedNumbers.size < ROWS * COLS) {
+      const num = Math.floor(Math.random() * MAX_NUM) + 1;
+      if (!usedNumbers.has(num)) {
+        usedNumbers.add(num);
+      }
+    }
+
+    const numbersArray = Array.from(usedNumbers);
+    for (let i = 0; i < ROWS; i++) {
+      card.push(numbersArray.slice(i * COLS, (i + 1) * COLS));
+    }
+
+    return card;
+  }
+
+  const card = createBingoCard();
+  console.log("card", card);
+
+  function displayBingoCard(card, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        const cell = document.createElement("div");
+        cell.textContent = card[i][j];
+        if (card[i][j] === "X") {
+          cell.classList.add("marked");
+        }
+        container.appendChild(cell);
+      }
+    }
+  }
+
+  function markNumber(card, number) {
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (card[i][j] === number) {
+          card[i][j] = "X";
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function checkWin(card) {
+    // Check rows and columns for a Bingo pattern
+    for (let i = 0; i < ROWS; i++) {
+      let rowFilled = true;
+      let colFilled = true;
+      for (let j = 0; j < COLS; j++) {
+        if (card[i][j] !== "X") {
+          rowFilled = false;
+        }
+        if (card[j][i] !== "X") {
+          colFilled = false;
+        }
+      }
+      if (rowFilled || colFilled) {
+        return true;
+      }
+    }
+
+    // Check diagonals for a Bingo pattern
+    let diagonal1Filled = true;
+    let diagonal2Filled = true;
+    for (let i = 0; i < ROWS; i++) {
+      if (card[i][i] !== "X") {
+        diagonal1Filled = false;
+      }
+      if (card[i][COLS - 1 - i] !== "X") {
+        diagonal2Filled = false;
+      }
+    }
+    if (diagonal1Filled || diagonal2Filled) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function markAsSeenInThree(id) {
+    finalArrayForThreeGrid.filter(train);
+
+    const currentTrain = finalArrayForThreeGrid.find(
+      (train) => train.id === id
+    );
+    //HIER WEITER irgendwie mit local storage
+  }
 
   return (
     <>
-      {arrayOfArraysForThreeGrid.map((arrayOfNineTrains) => (
-        <ThreeGrid key={arrayOfNineTrains[0].name}>
-          {arrayOfNineTrains.map((train) => (
-            <button key="train.id" type="button">
-              {train.name}
-            </button>
+      {finalArrayForThreeGrid.map((arrayOf3x3Trains) => (
+        <ThreeGrid key={arrayOf3x3Trains[0][0].name}>
+          {arrayOf3x3Trains.map((array) => (
+            <Fragment key={array[0].name}>
+              {array.map((train) => (
+                <button
+                  key="train.id"
+                  type="button"
+                  onClick={markAsSeenInThree(train.id)}
+                >
+                  {train.name}
+                </button>
+              ))}
+            </Fragment>
           ))}
         </ThreeGrid>
       ))}
-      {arrayOfArraysForFourGrid.map((arrayOfSixteenTrains) => (
-        <FourGrid key={arrayOfSixteenTrains[0].name}>
-          {arrayOfSixteenTrains.map((train) => (
-            <button key="train.id" type="button">
-              {train.name}
-            </button>
+
+      {finalArrayForFourGrid.map((arrayOf4x4Trains) => (
+        <FourGrid key={arrayOf4x4Trains[0][0].name}>
+          {arrayOf4x4Trains.map((array) => (
+            <Fragment key={array[0].name}>
+              {array.map((train) => (
+                <button key="train.id" type="button">
+                  {train.name}
+                </button>
+              ))}
+            </Fragment>
           ))}
         </FourGrid>
       ))}
