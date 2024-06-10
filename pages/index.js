@@ -2,7 +2,6 @@ import { shuffledTrains } from "../lib/shuffledTrains";
 import { Fragment } from "react";
 import styled from "styled-components";
 import useLocalStorageState from "use-local-storage-state";
-import { nanoid } from "nanoid";
 
 export default function Home() {
   //total 227 trains
@@ -135,16 +134,16 @@ export default function Home() {
   }
 
   function toggleSeenInThree(id) {
-    /*     const currentTrain = finalArrayForThreeGrid.find(
+    /*         const currentTrain = finalArrayForThreeGrid.find(
       (train) => train.id === id
-    ); */
+    ); 
 
     //const updatedTrain = {...currentTrain, isSeen: !currentTrain.isSeen}
     const updatedTrainArray = trainsArrayFor3by3.map(
       (train) => train.id === id && { ...train, isSeen: !train.isSeen }
     );
 
-    setTrainsArrayFor3by3(updatedTrainArray);
+    //setTrainsArrayFor3by3(updatedTrainArray); */
   }
 
   return (
@@ -157,7 +156,7 @@ export default function Home() {
                 <button
                   key={train.id}
                   type="button"
-                  className={train.isSeen ? "isSeen" : ""}
+                  //className={train.isSeen ? "isSeen" : ""}
                   onClick={toggleSeenInThree(train.id)}
                 >
                   {train.name}
@@ -173,7 +172,11 @@ export default function Home() {
           {arrayOf4x4Trains.map((array) => (
             <Fragment key={array[0].name}>
               {array.map((train) => (
-                <button key={train.id} type="button">
+                <button
+                  key={train.id}
+                  type="button"
+                  //className={train.isSeen ? "isSeen" : ""}
+                >
                   {train.name}
                 </button>
               ))}
