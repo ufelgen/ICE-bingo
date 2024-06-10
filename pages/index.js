@@ -1,14 +1,26 @@
 import { shuffledTrains } from "../lib/shuffledTrains";
 import { Fragment } from "react";
 import styled from "styled-components";
+import useLocalStorageState from "use-local-storage-state";
+import { nanoid } from "nanoid";
 
 export default function Home() {
   //total 227 trains
   //use 3x3 and 4x4 layouts for bingo
   //divide array into 11x9 = 99 for 3x3
   //and 8x16 = 128 for 4x4
-  const trainsArrayFor3by3 = shuffledTrains.slice(0, 99);
-  const trainsArrayFor4by4 = shuffledTrains.slice(99, 227);
+  const trainsArrayFor3by3PRE = shuffledTrains.slice(0, 99);
+  const trainsArrayFor4by4PRE = shuffledTrains.slice(99, 227);
+
+  const [trainsArrayFor3by3, setTrainsArrayFor3by3] = useLocalStorageState(
+    "trainsArrayFor3by3",
+    { defaultValue: trainsArrayFor3by3PRE }
+  );
+
+  const [trainsArrayFor4by4, setTrainsArrayFor4by4] = useLocalStorageState(
+    "trainsArrayFor4by4",
+    { defaultValue: trainsArrayFor4by4PRE }
+  );
 
   function splitUpInChunks(longArray, size) {
     let chunks = [];
@@ -36,7 +48,7 @@ export default function Home() {
   //let currentPlayer = 1;
   //let player1Card, player2Card;
 
-  function createBingoCard() {
+  /*   function createBingoCard() {
     const card = [];
     const usedNumbers = new Set();
 
@@ -72,9 +84,9 @@ export default function Home() {
         container.appendChild(cell);
       }
     }
-  }
+  } */
 
-  function markNumber(card, number) {
+  /*   function markNumber(card, number) {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
         if (card[i][j] === number) {
@@ -84,7 +96,7 @@ export default function Home() {
       }
     }
     return false;
-  }
+  } */
 
   function checkWin(card) {
     // Check rows and columns for a Bingo pattern
@@ -122,13 +134,17 @@ export default function Home() {
     return false;
   }
 
-  function markAsSeenInThree(id) {
-    finalArrayForThreeGrid.filter(train);
-
-    const currentTrain = finalArrayForThreeGrid.find(
+  function toggleSeenInThree(id) {
+    /*     const currentTrain = finalArrayForThreeGrid.find(
       (train) => train.id === id
+    ); */
+
+    //const updatedTrain = {...currentTrain, isSeen: !currentTrain.isSeen}
+    const updatedTrainArray = trainsArrayFor3by3.map(
+      (train) => train.id === id && { ...train, isSeen: !train.isSeen }
     );
-    //HIER WEITER irgendwie mit local storage
+
+    setTrainsArrayFor3by3(updatedTrainArray);
   }
 
   return (
@@ -139,9 +155,10 @@ export default function Home() {
             <Fragment key={array[0].name}>
               {array.map((train) => (
                 <button
-                  key="train.id"
+                  key={train.id}
                   type="button"
-                  onClick={markAsSeenInThree(train.id)}
+                  className={train.isSeen ? "isSeen" : ""}
+                  onClick={toggleSeenInThree(train.id)}
                 >
                   {train.name}
                 </button>
@@ -156,7 +173,7 @@ export default function Home() {
           {arrayOf4x4Trains.map((array) => (
             <Fragment key={array[0].name}>
               {array.map((train) => (
-                <button key="train.id" type="button">
+                <button key={train.id} type="button">
                   {train.name}
                 </button>
               ))}
@@ -189,6 +206,12 @@ const ThreeGrid = styled.section`
     width: 30vw;
     &:hover {
       color: black;
+    }
+
+    &.isSeen {
+      border: 1px solid darkmagenta;
+      background-color: darkmagenta;
+      color: white;
     }
   }
 `;
