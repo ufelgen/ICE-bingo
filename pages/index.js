@@ -232,15 +232,19 @@ export default function Home() {
     const columns = 3;
 
     // Check rows and columns for a Bingo pattern
-    /*     for (let i = 0; i < rows; i++) {
+    for (let i = 0; i < rows; i++) {
       let rowFilled = true;
       let columnFilled = true;
       for (let j = 0; j < columns; j++) {
-        if (currentSetArray[rowNumber - 1][j].isSeen == false) {
-          //console.log(currentSetArray[rowNumber - 1][j].name, "testi");
+        console.log(
+          currentSetArray[rowNumber - 1][j].name,
+          currentSetArray[rowNumber - 1][j].isSeen,
+          "testi"
+        );
+        if (currentSetArray[rowNumber - 1][j].isSeen === false) {
           rowFilled = false;
         }
-        if (currentSetArray[columnNumber - 1][i] == false) {
+        if (currentSetArray[i][columnNumber - 1].isSeen === false) {
           columnFilled = false;
         }
       }
@@ -248,7 +252,7 @@ export default function Home() {
         console.log("bingo");
         return true;
       }
-    } */
+    }
   }
 
   //const bingo = checkForBingoIn3x3();
