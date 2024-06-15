@@ -134,17 +134,37 @@ export default function Home() {
   }
 
   function toggleSeenInThree(id) {
-    /*         const currentTrain = finalArrayForThreeGrid.find(
-      (train) => train.id === id
-    ); 
+    const currentTrain = trainsArrayFor3by3.find((train) => train.id === id);
+    const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
+    const updatedTrainArray = trainsArrayFor3by3.map((train) => {
+      if (train.id === id) {
+        return updatedTrain;
+      } else {
+        return train;
+      }
+    });
 
-    //const updatedTrain = {...currentTrain, isSeen: !currentTrain.isSeen}
-    const updatedTrainArray = trainsArrayFor3by3.map(
-      (train) => train.id === id && { ...train, isSeen: !train.isSeen }
-    );
-
-    //setTrainsArrayFor3by3(updatedTrainArray); */
+    setTrainsArrayFor3by3(updatedTrainArray);
   }
+
+  function toggleSeenInFour(id) {
+    const currentTrain = trainsArrayFor4by4.find((train) => train.id === id);
+    const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
+    const updatedTrainArray = trainsArrayFor4by4.map((train) => {
+      if (train.id === id) {
+        return updatedTrain;
+      } else {
+        return train;
+      }
+    });
+
+    setTrainsArrayFor4by4(updatedTrainArray);
+  }
+
+  console.log("finalArrayForThreeGrid", finalArrayForThreeGrid);
+  console.log("finalArrayForFourGrid", finalArrayForFourGrid);
+
+  console.log("trainsArrayFor3by3", trainsArrayFor3by3);
 
   return (
     <>
@@ -156,8 +176,8 @@ export default function Home() {
                 <button
                   key={train.id}
                   type="button"
-                  //className={train.isSeen ? "isSeen" : ""}
-                  onClick={toggleSeenInThree(train.id)}
+                  className={train.isSeen ? "isSeen" : ""}
+                  onClick={() => toggleSeenInThree(train.id)}
                 >
                   {train.name}
                 </button>
@@ -175,7 +195,8 @@ export default function Home() {
                 <button
                   key={train.id}
                   type="button"
-                  //className={train.isSeen ? "isSeen" : ""}
+                  onClick={() => toggleSeenInFour(train.id)}
+                  className={train.isSeen ? "isSeen" : ""}
                 >
                   {train.name}
                 </button>
@@ -203,8 +224,8 @@ const ThreeGrid = styled.section`
   button {
     border: none;
     border-radius: 5px;
-    background-color: red;
-    color: white;
+    background-color: white;
+    color: red;
     height: 30vw;
     width: 30vw;
     &:hover {
@@ -212,8 +233,8 @@ const ThreeGrid = styled.section`
     }
 
     &.isSeen {
-      border: 1px solid darkmagenta;
-      background-color: darkmagenta;
+      border: 1px solid white;
+      background-color: red;
       color: white;
     }
   }
