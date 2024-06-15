@@ -187,27 +187,72 @@ export default function Home() {
 
     console.log("currentSet", currentSet);
 
-    const rows = 3;
-    const colums = 3;
-    const maximumNumber = 9;
-    // Check rows and columns for a Bingo pattern
+    const currentSetArray = splitUpInChunks(currentSet, 3);
+    console.log("currentSetArray", currentSetArray);
 
-    /* for (let i = 0; i < rows; i++) {
-      let rowFilled = true;
-      let columnFilled = true;
-      for (let j = 0; j < colums; j++) {
-        if (card[i][j] !== "X") {
-          rowFilled = false;
-        }
-        if (card[j][i] !== "X") {
-          colFilled = false;
+    function determinePositionInCurrentSet() {
+      for (let i = 1; i <= 9; i++) {
+        let positionInCurrentSetInFor = 0;
+        if (position === currentSetNumber * 9 - 9 + i) {
+          positionInCurrentSetInFor = i;
+          return positionInCurrentSetInFor;
         }
       }
-      if (rowFilled || colFilled) {
+    }
+
+    const positionInCurrentSet = determinePositionInCurrentSet();
+    console.log("positionInCurrentSet", positionInCurrentSet);
+
+    function determineWhichRow() {
+      for (let i = 1; i <= 3; i++) {
+        let rowNumber = 0;
+        if (positionInCurrentSet <= i * 3) {
+          rowNumber = i;
+          return rowNumber;
+        }
+      }
+    }
+
+    const rowNumber = determineWhichRow();
+    console.log("rowNumber", rowNumber);
+
+    function determineWhichColumn() {
+      for (let i = 1; i <= 3; i++) {
+        let columnNumber = 0;
+        if ((positionInCurrentSet - i) % 3 === 0) {
+          columnNumber = i;
+          return columnNumber;
+        }
+      }
+    }
+    const columnNumber = determineWhichColumn();
+    console.log("columnNumber", columnNumber);
+
+    const rows = 3;
+    const columns = 3;
+
+    // Check rows and columns for a Bingo pattern
+    /*     for (let i = 0; i < rows; i++) {
+      let rowFilled = true;
+      let columnFilled = true;
+      for (let j = 0; j < columns; j++) {
+        if (currentSetArray[rowNumber - 1][j].isSeen == false) {
+          //console.log(currentSetArray[rowNumber - 1][j].name, "testi");
+          rowFilled = false;
+        }
+        if (currentSetArray[columnNumber - 1][i] == false) {
+          columnFilled = false;
+        }
+      }
+      if (rowFilled || columnFilled) {
+        console.log("bingo");
         return true;
       }
     } */
   }
+
+  //const bingo = checkForBingoIn3x3();
+  //console.log("bingo", bingo);
 
   //console.log("finalArrayForThreeGrid", finalArrayForThreeGrid);
   //console.log("finalArrayForFourGrid", finalArrayForFourGrid);
