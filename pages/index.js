@@ -1,3 +1,4 @@
+import { check } from "prettier";
 import { shuffledTrains } from "../lib/shuffledTrains";
 import { Fragment } from "react";
 import styled from "styled-components";
@@ -135,6 +136,8 @@ export default function Home() {
 
   function toggleSeenInThree(id) {
     const currentTrain = trainsArrayFor3by3.find((train) => train.id === id);
+    const currentTrainIndex = trainsArrayFor3by3.indexOf(currentTrain);
+    console.log("currentTrainIndex", currentTrainIndex);
     const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
     const updatedTrainArray = trainsArrayFor3by3.map((train) => {
       if (train.id === id) {
@@ -145,6 +148,7 @@ export default function Home() {
     });
 
     setTrainsArrayFor3by3(updatedTrainArray);
+    checkForBingoIn3x3(currentTrain, currentTrainIndex);
   }
 
   function toggleSeenInFour(id) {
@@ -161,10 +165,54 @@ export default function Home() {
     setTrainsArrayFor4by4(updatedTrainArray);
   }
 
-  console.log("finalArrayForThreeGrid", finalArrayForThreeGrid);
-  console.log("finalArrayForFourGrid", finalArrayForFourGrid);
+  function checkForBingoIn3x3(currentTrain, index) {
+    const position = index + 1;
+    function determineCurrentSetNumber() {
+      for (let i = 1; i <= 11; i++) {
+        let currentSetInFor = 0;
+        if (position <= i * 9) {
+          currentSetInFor = i;
+          return currentSetInFor;
+        }
+      }
+    }
 
-  console.log("trainsArrayFor3by3", trainsArrayFor3by3);
+    const currentSetNumber = determineCurrentSetNumber();
+    console.log("currentSetNumber", currentSetNumber);
+
+    const currentSet = trainsArrayFor3by3.slice(
+      9 * currentSetNumber - 9,
+      9 * currentSetNumber
+    );
+
+    console.log("currentSet", currentSet);
+
+    const rows = 3;
+    const colums = 3;
+    const maximumNumber = 9;
+    // Check rows and columns for a Bingo pattern
+
+    /* for (let i = 0; i < rows; i++) {
+      let rowFilled = true;
+      let columnFilled = true;
+      for (let j = 0; j < colums; j++) {
+        if (card[i][j] !== "X") {
+          rowFilled = false;
+        }
+        if (card[j][i] !== "X") {
+          colFilled = false;
+        }
+      }
+      if (rowFilled || colFilled) {
+        return true;
+      }
+    } */
+  }
+
+  //console.log("finalArrayForThreeGrid", finalArrayForThreeGrid);
+  //console.log("finalArrayForFourGrid", finalArrayForFourGrid);
+
+  //console.log("trainsArrayFor3by3", trainsArrayFor3by3);
 
   return (
     <>
