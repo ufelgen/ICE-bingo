@@ -1,8 +1,8 @@
-import { check } from "prettier";
 import { shuffledTrains } from "../lib/shuffledTrains";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import styled from "styled-components";
 import useLocalStorageState from "use-local-storage-state";
+import dynamic from "next/dynamic";
 
 export default function Home() {
   //total 227 trains
@@ -12,6 +12,9 @@ export default function Home() {
   const trainsArrayFor3by3PRE = shuffledTrains.slice(0, 99);
   const trainsArrayFor4by4PRE = shuffledTrains.slice(99, 227);
 
+  const [celebration, setCelebration] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [bingo, setBingo] = useState(false);
   const [trainsArrayFor3by3, setTrainsArrayFor3by3] = useLocalStorageState(
     "trainsArrayFor3by3",
     { defaultValue: trainsArrayFor3by3PRE }
@@ -41,63 +44,6 @@ export default function Home() {
   const finalArrayForFourGrid = splitUpInChunks(arrayOfArraysForFourGrid, 4);
 
   //bingo code
-  const ROWS = 5;
-  const COLS = 5;
-  const MAX_NUM = 25;
-
-  //let currentPlayer = 1;
-  //let player1Card, player2Card;
-
-  /*   function createBingoCard() {
-    const card = [];
-    const usedNumbers = new Set();
-
-    while (usedNumbers.size < ROWS * COLS) {
-      const num = Math.floor(Math.random() * MAX_NUM) + 1;
-      if (!usedNumbers.has(num)) {
-        usedNumbers.add(num);
-      }
-    }
-
-    const numbersArray = Array.from(usedNumbers);
-    for (let i = 0; i < ROWS; i++) {
-      card.push(numbersArray.slice(i * COLS, (i + 1) * COLS));
-    }
-
-    return card;
-  }
-
-  const card = createBingoCard();
-  console.log("card", card);
-
-  function displayBingoCard(card, containerId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = "";
-
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        const cell = document.createElement("div");
-        cell.textContent = card[i][j];
-        if (card[i][j] === "X") {
-          cell.classList.add("marked");
-        }
-        container.appendChild(cell);
-      }
-    }
-  } */
-
-  /*   function markNumber(card, number) {
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        if (card[i][j] === number) {
-          card[i][j] = "X";
-          return true;
-        }
-      }
-    }
-    return false;
-  } */
-
   function checkWin(card) {
     // Check rows and columns for a Bingo pattern
     for (let i = 0; i < ROWS; i++) {
@@ -137,6 +83,7 @@ export default function Home() {
   function toggleSeenInThree(id) {
     const currentTrain = trainsArrayFor3by3.find((train) => train.id === id);
     const currentTrainIndex = trainsArrayFor3by3.indexOf(currentTrain);
+
     console.log("currentTrainIndex", currentTrainIndex);
     const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
     const updatedTrainArray = trainsArrayFor3by3.map((train) => {
@@ -148,7 +95,12 @@ export default function Home() {
     });
 
     setTrainsArrayFor3by3(updatedTrainArray);
-    checkForBingoIn3x3(currentTrain, currentTrainIndex);
+    checkForBingoIn3x3(currentTrainIndex);
+    /*     const bingo = checkForBingoIn3x3(currentTrainIndex);
+    console.log("bingo", bingo);
+    if (bingo) {
+      handleCelebration();
+    } */
   }
 
   function toggleSeenInFour(id) {
@@ -165,8 +117,8 @@ export default function Home() {
     setTrainsArrayFor4by4(updatedTrainArray);
   }
 
-  function checkForBingoIn3x3(currentTrain, index) {
-    const position = index + 1;
+  /*   function checkForBingoIn3x3(currentIndex) {
+    const position = currentIndex + 1;
     function determineCurrentSetNumber() {
       for (let i = 1; i <= 11; i++) {
         let currentSetInFor = 0;
@@ -239,7 +191,10 @@ export default function Home() {
         console.log(
           currentSetArray[rowNumber - 1][j].name,
           currentSetArray[rowNumber - 1][j].isSeen,
-          "testi"
+          "rows",
+          currentSetArray[i][columnNumber - 1].name,
+          currentSetArray[i][columnNumber - 1].isSeen,
+          "columns"
         );
         if (currentSetArray[rowNumber - 1][j].isSeen === false) {
           rowFilled = false;
@@ -249,13 +204,123 @@ export default function Home() {
         }
       }
       if (rowFilled || columnFilled) {
-        console.log("bingo");
-        return true;
+        handleCelebration();
+      }
+    }
+  } */
+
+  function checkForBingoIn3x3(currentIndex) {
+    const position = currentIndex + 1;
+    function determineCurrentSetNumber() {
+      for (let i = 1; i <= 11; i++) {
+        let currentSetInFor = 0;
+        if (position <= i * 9) {
+          currentSetInFor = i;
+          return currentSetInFor;
+        }
+      }
+    }
+
+    const currentSetNumber = determineCurrentSetNumber();
+    console.log("currentSetNumber", currentSetNumber);
+
+    const currentSet = trainsArrayFor3by3.slice(
+      9 * currentSetNumber - 9,
+      9 * currentSetNumber
+    );
+
+    console.log("currentSet", currentSet);
+
+    const currentSetArray = splitUpInChunks(currentSet, 3);
+    console.log("currentSetArray", currentSetArray);
+
+    function determinePositionInCurrentSet() {
+      for (let i = 1; i <= 9; i++) {
+        let positionInCurrentSetInFor = 0;
+        if (position === currentSetNumber * 9 - 9 + i) {
+          positionInCurrentSetInFor = i;
+          return positionInCurrentSetInFor;
+        }
+      }
+    }
+
+    const positionInCurrentSet = determinePositionInCurrentSet();
+    console.log("positionInCurrentSet", positionInCurrentSet);
+
+    function determineWhichRow() {
+      for (let i = 1; i <= 3; i++) {
+        let rowNumber = 0;
+        if (positionInCurrentSet <= i * 3) {
+          rowNumber = i;
+          return rowNumber;
+        }
+      }
+    }
+
+    const rowNumber = determineWhichRow();
+    console.log("rowNumber", rowNumber);
+
+    function determineWhichColumn() {
+      for (let i = 1; i <= 3; i++) {
+        let columnNumber = 0;
+        if ((positionInCurrentSet - i) % 3 === 0) {
+          columnNumber = i;
+          return columnNumber;
+        }
+      }
+    }
+    const columnNumber = determineWhichColumn();
+    console.log("columnNumber", columnNumber);
+
+    const rows = 3;
+    const columns = 3;
+
+    // Check rows and columns for a Bingo pattern
+    for (let i = 0; i < rows; i++) {
+      let rowFilled = true;
+      let columnFilled = true;
+      for (let j = 0; j < columns; j++) {
+        console.log(
+          currentSetArray[rowNumber - 1][j].name,
+          currentSetArray[rowNumber - 1][j].isSeen,
+          "rows",
+          currentSetArray[i][columnNumber - 1].name,
+          currentSetArray[i][columnNumber - 1].isSeen,
+          "columns"
+        );
+        if (currentSetArray[i][j].isSeen === false) {
+          rowFilled = false;
+        }
+        if (currentSetArray[j][i].isSeen === false) {
+          columnFilled = false;
+        }
+      }
+      if (rowFilled || columnFilled) {
+        handleCelebration();
       }
     }
   }
 
-  //const bingo = checkForBingoIn3x3();
+  //immer eins hintendran..
+
+  const { height, width } = dynamic(() => import("../helpers/useWindowSize"), {
+    ssr: false,
+  });
+
+  const Confetti = dynamic(() => import("react-confetti"), {
+    ssr: false,
+  });
+
+  function handleCelebration() {
+    setCelebration(true);
+    setTimeout(handleConfettiStop, 5000);
+  }
+
+  function handleConfettiStop() {
+    setCelebration(false);
+  }
+
+  //const bingoIn3x3 = toggle();
   //console.log("bingo", bingo);
 
   //console.log("finalArrayForThreeGrid", finalArrayForThreeGrid);
@@ -265,6 +330,11 @@ export default function Home() {
 
   return (
     <>
+      {celebration && (
+        <>
+          <Confetti height={height} width={width} />
+        </>
+      )}
       {finalArrayForThreeGrid.map((arrayOf3x3Trains) => (
         <ThreeGrid key={arrayOf3x3Trains[0][0].name}>
           {arrayOf3x3Trains.map((array) => (
@@ -283,7 +353,6 @@ export default function Home() {
           ))}
         </ThreeGrid>
       ))}
-
       {finalArrayForFourGrid.map((arrayOf4x4Trains) => (
         <FourGrid key={arrayOf4x4Trains[0][0].name}>
           {arrayOf4x4Trains.map((array) => (
