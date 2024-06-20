@@ -1,5 +1,5 @@
 import { shuffledTrains } from "../lib/shuffledTrains";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import styled from "styled-components";
 import useLocalStorageState from "use-local-storage-state";
 import dynamic from "next/dynamic";
@@ -13,8 +13,6 @@ export default function Home() {
   const trainsArrayFor4by4PRE = shuffledTrains.slice(99, 227);
 
   const [celebration, setCelebration] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [bingo, setBingo] = useState(false);
   const [trainsArrayFor3by3, setTrainsArrayFor3by3] = useLocalStorageState(
     "trainsArrayFor3by3",
     { defaultValue: trainsArrayFor3by3PRE }
@@ -79,12 +77,13 @@ export default function Home() {
 
     return false;
   }
+  //end bingo code
 
   function toggleSeenInThree(id) {
     const currentTrain = trainsArrayFor3by3.find((train) => train.id === id);
     const currentTrainIndex = trainsArrayFor3by3.indexOf(currentTrain);
 
-    console.log("currentTrainIndex", currentTrainIndex);
+    // console.log("currentTrainIndex", currentTrainIndex);
     const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
     const updatedTrainArray = trainsArrayFor3by3.map((train) => {
       if (train.id === id) {
@@ -95,12 +94,7 @@ export default function Home() {
     });
 
     setTrainsArrayFor3by3(updatedTrainArray);
-    checkForBingoIn3x3(currentTrainIndex);
-    /*     const bingo = checkForBingoIn3x3(currentTrainIndex);
-    console.log("bingo", bingo);
-    if (bingo) {
-      handleCelebration();
-    } */
+    checkForBingoIn3x3(currentTrainIndex, updatedTrainArray);
   }
 
   function toggleSeenInFour(id) {
@@ -117,7 +111,7 @@ export default function Home() {
     setTrainsArrayFor4by4(updatedTrainArray);
   }
 
-  /*   function checkForBingoIn3x3(currentIndex) {
+  function checkForBingoIn3x3(currentIndex, updatedTrainArray) {
     const position = currentIndex + 1;
     function determineCurrentSetNumber() {
       for (let i = 1; i <= 11; i++) {
@@ -130,17 +124,14 @@ export default function Home() {
     }
 
     const currentSetNumber = determineCurrentSetNumber();
-    console.log("currentSetNumber", currentSetNumber);
+    //console.log("currentSetNumber", currentSetNumber);
 
-    const currentSet = trainsArrayFor3by3.slice(
+    const currentSet = updatedTrainArray.slice(
       9 * currentSetNumber - 9,
       9 * currentSetNumber
     );
 
-    console.log("currentSet", currentSet);
-
     const currentSetArray = splitUpInChunks(currentSet, 3);
-    console.log("currentSetArray", currentSetArray);
 
     function determinePositionInCurrentSet() {
       for (let i = 1; i <= 9; i++) {
@@ -166,7 +157,6 @@ export default function Home() {
     }
 
     const rowNumber = determineWhichRow();
-    console.log("rowNumber", rowNumber);
 
     function determineWhichColumn() {
       for (let i = 1; i <= 3; i++) {
@@ -178,7 +168,6 @@ export default function Home() {
       }
     }
     const columnNumber = determineWhichColumn();
-    console.log("columnNumber", columnNumber);
 
     const rows = 3;
     const columns = 3;
@@ -188,110 +177,10 @@ export default function Home() {
       let rowFilled = true;
       let columnFilled = true;
       for (let j = 0; j < columns; j++) {
-        console.log(
-          currentSetArray[rowNumber - 1][j].name,
-          currentSetArray[rowNumber - 1][j].isSeen,
-          "rows",
-          currentSetArray[i][columnNumber - 1].name,
-          currentSetArray[i][columnNumber - 1].isSeen,
-          "columns"
-        );
         if (currentSetArray[rowNumber - 1][j].isSeen === false) {
           rowFilled = false;
         }
-        if (currentSetArray[i][columnNumber - 1].isSeen === false) {
-          columnFilled = false;
-        }
-      }
-      if (rowFilled || columnFilled) {
-        handleCelebration();
-      }
-    }
-  } */
-
-  function checkForBingoIn3x3(currentIndex) {
-    const position = currentIndex + 1;
-    function determineCurrentSetNumber() {
-      for (let i = 1; i <= 11; i++) {
-        let currentSetInFor = 0;
-        if (position <= i * 9) {
-          currentSetInFor = i;
-          return currentSetInFor;
-        }
-      }
-    }
-
-    const currentSetNumber = determineCurrentSetNumber();
-    console.log("currentSetNumber", currentSetNumber);
-
-    const currentSet = trainsArrayFor3by3.slice(
-      9 * currentSetNumber - 9,
-      9 * currentSetNumber
-    );
-
-    console.log("currentSet", currentSet);
-
-    const currentSetArray = splitUpInChunks(currentSet, 3);
-    console.log("currentSetArray", currentSetArray);
-
-    function determinePositionInCurrentSet() {
-      for (let i = 1; i <= 9; i++) {
-        let positionInCurrentSetInFor = 0;
-        if (position === currentSetNumber * 9 - 9 + i) {
-          positionInCurrentSetInFor = i;
-          return positionInCurrentSetInFor;
-        }
-      }
-    }
-
-    const positionInCurrentSet = determinePositionInCurrentSet();
-    console.log("positionInCurrentSet", positionInCurrentSet);
-
-    function determineWhichRow() {
-      for (let i = 1; i <= 3; i++) {
-        let rowNumber = 0;
-        if (positionInCurrentSet <= i * 3) {
-          rowNumber = i;
-          return rowNumber;
-        }
-      }
-    }
-
-    const rowNumber = determineWhichRow();
-    console.log("rowNumber", rowNumber);
-
-    function determineWhichColumn() {
-      for (let i = 1; i <= 3; i++) {
-        let columnNumber = 0;
-        if ((positionInCurrentSet - i) % 3 === 0) {
-          columnNumber = i;
-          return columnNumber;
-        }
-      }
-    }
-    const columnNumber = determineWhichColumn();
-    console.log("columnNumber", columnNumber);
-
-    const rows = 3;
-    const columns = 3;
-
-    // Check rows and columns for a Bingo pattern
-    for (let i = 0; i < rows; i++) {
-      let rowFilled = true;
-      let columnFilled = true;
-      for (let j = 0; j < columns; j++) {
-        console.log(
-          currentSetArray[rowNumber - 1][j].name,
-          currentSetArray[rowNumber - 1][j].isSeen,
-          "rows",
-          currentSetArray[i][columnNumber - 1].name,
-          currentSetArray[i][columnNumber - 1].isSeen,
-          "columns"
-        );
-        if (currentSetArray[i][j].isSeen === false) {
-          rowFilled = false;
-        }
-        if (currentSetArray[j][i].isSeen === false) {
+        if (currentSetArray[j][columnNumber - 1].isSeen === false) {
           columnFilled = false;
         }
       }
@@ -300,8 +189,6 @@ export default function Home() {
       }
     }
   }
-
-  //immer eins hintendran..
 
   const { height, width } = dynamic(() => import("../helpers/useWindowSize"), {
     ssr: false,
@@ -319,14 +206,6 @@ export default function Home() {
   function handleConfettiStop() {
     setCelebration(false);
   }
-
-  //const bingoIn3x3 = toggle();
-  //console.log("bingo", bingo);
-
-  //console.log("finalArrayForThreeGrid", finalArrayForThreeGrid);
-  //console.log("finalArrayForFourGrid", finalArrayForFourGrid);
-
-  //console.log("trainsArrayFor3by3", trainsArrayFor3by3);
 
   return (
     <>
