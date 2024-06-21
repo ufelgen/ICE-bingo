@@ -132,6 +132,7 @@ export default function Home() {
     );
 
     const currentSetArray = splitUpInChunks(currentSet, 3);
+    console.log("currentSetArray", currentSetArray);
 
     function determinePositionInCurrentSet() {
       for (let i = 1; i <= 9; i++) {
@@ -144,7 +145,6 @@ export default function Home() {
     }
 
     const positionInCurrentSet = determinePositionInCurrentSet();
-    console.log("positionInCurrentSet", positionInCurrentSet);
 
     function determineWhichRow() {
       for (let i = 1; i <= 3; i++) {
@@ -155,7 +155,6 @@ export default function Home() {
         }
       }
     }
-
     const rowNumber = determineWhichRow();
 
     function determineWhichColumn() {
@@ -186,6 +185,29 @@ export default function Home() {
       }
       if (rowFilled || columnFilled) {
         handleCelebration();
+      }
+    }
+
+    // Check diagonals for a Bingo pattern
+    if (
+      rowNumber == columnNumber ||
+      rowNumber == columns ||
+      columnNumber == rows
+    ) {
+      for (let i = 0; i < rows; i++) {
+        let diagonal1Filled = true;
+        let diagonal2Filled = true;
+        for (let j = 0; j < columns; j++) {
+          if (currentSetArray[j][j].isSeen === false) {
+            diagonal1Filled = false;
+          }
+          if (currentSetArray[j][columns - 1 - j].isSeen === false) {
+            diagonal2Filled = false;
+          }
+        }
+        if (diagonal1Filled || diagonal2Filled) {
+          handleCelebration();
+        }
       }
     }
   }
