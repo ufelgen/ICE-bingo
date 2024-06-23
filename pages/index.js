@@ -170,7 +170,7 @@ export default function Home() {
 
     const rows = 3;
     const columns = 3;
-
+    //huhu testi
     // Check rows and columns for a Bingo pattern
     for (let i = 0; i < rows; i++) {
       let rowFilled = true;
