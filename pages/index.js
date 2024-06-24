@@ -3,7 +3,7 @@ import { Fragment, useState, useEffect } from "react";
 import styled from "styled-components";
 import useLocalStorageState from "use-local-storage-state";
 import dynamic from "next/dynamic";
-import { toggleSeen } from "../helpers/bingoFunctions";
+import { toggleSeen, splitUpInChunks } from "../helpers/bingoFunctions";
 
 export default function Home() {
   //total 227 trains
@@ -24,138 +24,10 @@ export default function Home() {
     { defaultValue: trainsArrayFor4by4PRE }
   );
 
-  function splitUpInChunks(longArray, size) {
-    let chunks = [];
-
-    longArray.forEach((item) => {
-      if (!chunks.length || chunks[chunks.length - 1].length == size)
-        chunks.push([]);
-
-      chunks[chunks.length - 1].push(item);
-    });
-
-    return chunks;
-  }
-
   const arrayOfArraysForThreeGrid = splitUpInChunks(trainsArrayFor3by3, 3);
   const finalArrayForThreeGrid = splitUpInChunks(arrayOfArraysForThreeGrid, 3);
   const arrayOfArraysForFourGrid = splitUpInChunks(trainsArrayFor4by4, 4);
   const finalArrayForFourGrid = splitUpInChunks(arrayOfArraysForFourGrid, 4);
-
-  /*   function toggleSeenInFour(id) {
-    const currentTrain = trainsArrayFor4by4.find((train) => train.id === id);
-    const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
-    const updatedTrainArray = trainsArrayFor4by4.map((train) => {
-      if (train.id === id) {
-        return updatedTrain;
-      } else {
-        return train;
-      }
-    });
-
-    setTrainsArrayFor4by4(updatedTrainArray);
-  } */
-
-  function checkForBingoIn3x3(currentIndex, updatedTrainArray) {
-    const position = currentIndex + 1;
-    function determineCurrentSetNumber() {
-      for (let i = 1; i <= 11; i++) {
-        let currentSetInFor = 0;
-        if (position <= i * 9) {
-          currentSetInFor = i;
-          return currentSetInFor;
-        }
-      }
-    }
-
-    const currentSetNumber = determineCurrentSetNumber();
-    //console.log("currentSetNumber", currentSetNumber);
-
-    const currentSet = updatedTrainArray.slice(
-      9 * currentSetNumber - 9,
-      9 * currentSetNumber
-    );
-
-    const currentSetArray = splitUpInChunks(currentSet, 3);
-    console.log("currentSetArray", currentSetArray);
-
-    function determinePositionInCurrentSet() {
-      for (let i = 1; i <= 9; i++) {
-        let positionInCurrentSetInFor = 0;
-        if (position === currentSetNumber * 9 - 9 + i) {
-          positionInCurrentSetInFor = i;
-          return positionInCurrentSetInFor;
-        }
-      }
-    }
-
-    const positionInCurrentSet = determinePositionInCurrentSet();
-
-    function determineWhichRow() {
-      for (let i = 1; i <= 3; i++) {
-        let rowNumber = 0;
-        if (positionInCurrentSet <= i * 3) {
-          rowNumber = i;
-          return rowNumber;
-        }
-      }
-    }
-    const rowNumber = determineWhichRow();
-
-    function determineWhichColumn() {
-      for (let i = 1; i <= 3; i++) {
-        let columnNumber = 0;
-        if ((positionInCurrentSet - i) % 3 === 0) {
-          columnNumber = i;
-          return columnNumber;
-        }
-      }
-    }
-    const columnNumber = determineWhichColumn();
-
-    const rows = 3;
-    const columns = 3;
-
-    // Check rows and columns for a Bingo pattern
-    for (let i = 0; i < rows; i++) {
-      let rowFilled = true;
-      let columnFilled = true;
-      for (let j = 0; j < columns; j++) {
-        if (currentSetArray[rowNumber - 1][j].isSeen === false) {
-          rowFilled = false;
-        }
-        if (currentSetArray[j][columnNumber - 1].isSeen === false) {
-          columnFilled = false;
-        }
-      }
-      if (rowFilled || columnFilled) {
-        handleCelebration();
-      }
-    }
-
-    // Check diagonals for a Bingo pattern
-    if (
-      rowNumber == columnNumber ||
-      rowNumber == columns ||
-      columnNumber == rows
-    ) {
-      for (let i = 0; i < rows; i++) {
-        let diagonal1Filled = true;
-        let diagonal2Filled = true;
-        for (let j = 0; j < columns; j++) {
-          if (currentSetArray[j][j].isSeen === false) {
-            diagonal1Filled = false;
-          }
-          if (currentSetArray[j][columns - 1 - j].isSeen === false) {
-            diagonal2Filled = false;
-          }
-        }
-        if (diagonal1Filled || diagonal2Filled) {
-          handleCelebration();
-        }
-      }
-    }
-  }
 
   const { height, width } = dynamic(() => import("../helpers/useWindowSize"), {
     ssr: false,
@@ -195,7 +67,8 @@ export default function Home() {
                       train.id,
                       setTrainsArrayFor3by3,
                       trainsArrayFor3by3,
-                      3
+                      3,
+                      handleCelebration
                     )
                   }
                 >
