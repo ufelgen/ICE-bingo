@@ -3,6 +3,7 @@ import { Fragment, useState, useEffect } from "react";
 import styled from "styled-components";
 import useLocalStorageState from "use-local-storage-state";
 import dynamic from "next/dynamic";
+import { toggleSeen } from "../helpers/bingoFunctions";
 
 export default function Home() {
   //total 227 trains
@@ -41,63 +42,7 @@ export default function Home() {
   const arrayOfArraysForFourGrid = splitUpInChunks(trainsArrayFor4by4, 4);
   const finalArrayForFourGrid = splitUpInChunks(arrayOfArraysForFourGrid, 4);
 
-  //bingo code
-  function checkWin(card) {
-    // Check rows and columns for a Bingo pattern
-    for (let i = 0; i < ROWS; i++) {
-      let rowFilled = true;
-      let colFilled = true;
-      for (let j = 0; j < COLS; j++) {
-        if (card[i][j] !== "X") {
-          rowFilled = false;
-        }
-        if (card[j][i] !== "X") {
-          colFilled = false;
-        }
-      }
-      if (rowFilled || colFilled) {
-        return true;
-      }
-    }
-
-    // Check diagonals for a Bingo pattern
-    let diagonal1Filled = true;
-    let diagonal2Filled = true;
-    for (let i = 0; i < ROWS; i++) {
-      if (card[i][i] !== "X") {
-        diagonal1Filled = false;
-      }
-      if (card[i][COLS - 1 - i] !== "X") {
-        diagonal2Filled = false;
-      }
-    }
-    if (diagonal1Filled || diagonal2Filled) {
-      return true;
-    }
-
-    return false;
-  }
-  //end bingo code
-
-  function toggleSeenInThree(id) {
-    const currentTrain = trainsArrayFor3by3.find((train) => train.id === id);
-    const currentTrainIndex = trainsArrayFor3by3.indexOf(currentTrain);
-
-    // console.log("currentTrainIndex", currentTrainIndex);
-    const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
-    const updatedTrainArray = trainsArrayFor3by3.map((train) => {
-      if (train.id === id) {
-        return updatedTrain;
-      } else {
-        return train;
-      }
-    });
-
-    setTrainsArrayFor3by3(updatedTrainArray);
-    checkForBingoIn3x3(currentTrainIndex, updatedTrainArray);
-  }
-
-  function toggleSeenInFour(id) {
+  /*   function toggleSeenInFour(id) {
     const currentTrain = trainsArrayFor4by4.find((train) => train.id === id);
     const updatedTrain = { ...currentTrain, isSeen: !currentTrain.isSeen };
     const updatedTrainArray = trainsArrayFor4by4.map((train) => {
@@ -109,7 +54,7 @@ export default function Home() {
     });
 
     setTrainsArrayFor4by4(updatedTrainArray);
-  }
+  } */
 
   function checkForBingoIn3x3(currentIndex, updatedTrainArray) {
     const position = currentIndex + 1;
@@ -170,7 +115,7 @@ export default function Home() {
 
     const rows = 3;
     const columns = 3;
-    //huhu testi
+
     // Check rows and columns for a Bingo pattern
     for (let i = 0; i < rows; i++) {
       let rowFilled = true;
@@ -245,7 +190,14 @@ export default function Home() {
                   key={train.id}
                   type="button"
                   className={train.isSeen ? "isSeen" : ""}
-                  onClick={() => toggleSeenInThree(train.id)}
+                  onClick={() =>
+                    toggleSeen(
+                      train.id,
+                      setTrainsArrayFor3by3,
+                      trainsArrayFor3by3,
+                      3
+                    )
+                  }
                 >
                   {train.name}
                 </button>
@@ -262,7 +214,14 @@ export default function Home() {
                 <button
                   key={train.id}
                   type="button"
-                  onClick={() => toggleSeenInFour(train.id)}
+                  onClick={() =>
+                    toggleSeen(
+                      train.id,
+                      setTrainsArrayFor4by4,
+                      trainsArrayFor4by4,
+                      4
+                    )
+                  }
                   className={train.isSeen ? "isSeen" : ""}
                 >
                   {train.name}
