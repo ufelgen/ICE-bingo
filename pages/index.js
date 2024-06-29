@@ -39,7 +39,8 @@ export default function Home() {
 
   function handleCelebration() {
     setCelebration(true);
-    setTimeout(handleConfettiStop, 5000);
+    //setTimeout(handleConfettiStop, 5000);
+    console.log(window.scrollY);
   }
 
   function handleConfettiStop() {
@@ -50,7 +51,18 @@ export default function Home() {
     <>
       {celebration && (
         <>
-          <Confetti height={height} width={width} />
+          <Confetti
+            height={height}
+            width={width}
+            confettiSource={{
+              x: 0,
+              y: window.scrollY,
+              w: window.innerWidth,
+              h: 0,
+            }}
+            recycle={false}
+            numberOfPieces={666}
+          />
         </>
       )}
       {finalArrayForThreeGrid.map((arrayOf3x3Trains) => (
@@ -92,7 +104,8 @@ export default function Home() {
                       train.id,
                       setTrainsArrayFor4by4,
                       trainsArrayFor4by4,
-                      4
+                      4,
+                      handleCelebration
                     )
                   }
                   className={train.isSeen ? "isSeen" : ""}

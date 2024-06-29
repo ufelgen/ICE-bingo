@@ -30,28 +30,37 @@ export function toggleSeen(
   });
 
   setterFunction(updatedTrainArray);
-  if (gridNumber === 3) {
-    checkForBingoIn3x3(
+  /*   if (gridNumber === 3) {
+    checkForBingo(
       currentTrainIndex,
       updatedTrainArray,
-      celebrationFunction
+      celebrationFunction,
+      gridNumber
     );
   } else if (gridNumber === 4) {
     //checkForBingoIn4x4();
     console.log("huhu testi");
-  }
+  } */
+  checkForBingo(
+    currentTrainIndex,
+    updatedTrainArray,
+    celebrationFunction,
+    gridNumber
+  );
 }
 
-export function checkForBingoIn3x3(
+export function checkForBingo(
   currentIndex,
   updatedTrainArray,
-  celebrationFunction
+  celebrationFunction,
+  gridNumber
 ) {
   const position = currentIndex + 1;
+
   function determineCurrentSetNumber() {
     for (let i = 1; i <= 11; i++) {
       let currentSetInFor = 0;
-      if (position <= i * 9) {
+      if (position <= i * gridNumber * gridNumber) {
         currentSetInFor = i;
         return currentSetInFor;
       }
@@ -60,21 +69,21 @@ export function checkForBingoIn3x3(
 
   const currentSetNumber = determineCurrentSetNumber();
 
-  //anpassen für 4er Grid
   const currentSet = updatedTrainArray.slice(
-    9 * currentSetNumber - 9,
-    9 * currentSetNumber
+    gridNumber * gridNumber * currentSetNumber - gridNumber * gridNumber,
+    gridNumber * gridNumber * currentSetNumber
   );
 
-  //anpassen für 4er Grid
-  const currentSetArray = splitUpInChunks(currentSet, 3);
+  const currentSetArray = splitUpInChunks(currentSet, gridNumber);
   console.log("currentSetArray", currentSetArray);
 
-  //anpassen für 4er Grid
   function determinePositionInCurrentSet() {
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 1; i <= gridNumber * gridNumber; i++) {
       let positionInCurrentSetInFor = 0;
-      if (position === currentSetNumber * 9 - 9 + i) {
+      if (
+        position ===
+        currentSetNumber * gridNumber * gridNumber - gridNumber * gridNumber + i
+      ) {
         positionInCurrentSetInFor = i;
         return positionInCurrentSetInFor;
       }
@@ -83,11 +92,10 @@ export function checkForBingoIn3x3(
 
   const positionInCurrentSet = determinePositionInCurrentSet();
 
-  //anpassen für 4er Grid
   function determineWhichRow() {
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= gridNumber; i++) {
       let rowNumber = 0;
-      if (positionInCurrentSet <= i * 3) {
+      if (positionInCurrentSet <= i * gridNumber) {
         rowNumber = i;
         return rowNumber;
       }
@@ -95,11 +103,10 @@ export function checkForBingoIn3x3(
   }
   const rowNumber = determineWhichRow();
 
-  //anpassen für 4er Grid
   function determineWhichColumn() {
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= gridNumber; i++) {
       let columnNumber = 0;
-      if ((positionInCurrentSet - i) % 3 === 0) {
+      if ((positionInCurrentSet - i) % gridNumber === 0) {
         columnNumber = i;
         return columnNumber;
       }
@@ -107,13 +114,10 @@ export function checkForBingoIn3x3(
   }
   const columnNumber = determineWhichColumn();
 
-  //anpassen für 4er Grid
-  const rows = 3;
-  const columns = 3;
+  const rows = gridNumber;
+  const columns = gridNumber;
 
   // Check rows and columns for a Bingo pattern
-  // dieser Teil ist unabhängig von der Anzahl an Reihen und Spalten, wenn rows
-  // und columns angepasst ist.
   for (let i = 0; i < rows; i++) {
     let rowFilled = true;
     let columnFilled = true;
@@ -127,6 +131,7 @@ export function checkForBingoIn3x3(
     }
     if (rowFilled || columnFilled) {
       celebrationFunction();
+      console.log("row or column bingo!");
     }
   }
 
@@ -152,6 +157,7 @@ export function checkForBingoIn3x3(
       }
       if (diagonal1Filled || diagonal2Filled) {
         celebrationFunction();
+        console.log("diagonal bingo!");
       }
     }
   }
