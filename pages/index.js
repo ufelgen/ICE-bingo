@@ -39,7 +39,7 @@ export default function Home() {
 
   function handleCelebration() {
     setCelebration(true);
-    //setTimeout(handleConfettiStop, 5000);
+    setTimeout(handleConfettiStop, 5000);
     console.log(window.scrollY);
   }
 
@@ -47,12 +47,14 @@ export default function Home() {
     setCelebration(false);
   }
 
+  console.log("celebration", celebration);
+
   return (
     <>
       {celebration && (
         <>
           <Confetti
-            height={height}
+            height={10000}
             width={width}
             confettiSource={{
               x: 0,
@@ -61,7 +63,8 @@ export default function Home() {
               h: 0,
             }}
             recycle={false}
-            numberOfPieces={666}
+            numberOfPieces={7000}
+            initialVelocityY={window.innerHeight}
           />
         </>
       )}
