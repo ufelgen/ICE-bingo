@@ -50,10 +50,9 @@ export default function Home() {
 
   const sectionRefs = useRef([]);
 
-  const scrollToSection = (index) => {
+  function scrollToSection(index) {
     sectionRefs.current[index].scrollIntoView({ behavior: "smooth" });
-    console.log("index", index);
-  };
+  }
 
   return (
     <>

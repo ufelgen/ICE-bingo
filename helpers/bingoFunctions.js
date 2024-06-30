@@ -65,7 +65,6 @@ export function checkForBingo(
   );
 
   const currentSetArray = splitUpInChunks(currentSet, gridNumber);
-  console.log("currentSetArray", currentSetArray);
 
   function determinePositionInCurrentSet() {
     for (let i = 1; i <= gridNumber ** 2; i++) {
@@ -126,9 +125,6 @@ export function checkForBingo(
   }
 
   // Check diagonals for a Bingo pattern
-  // dieser Teil müsste unabhängig von der Anzahl an Reihen und Spalten sein,
-  // wenn rows und columns angepasst ist.
-
   if (
     rowNumber == columnNumber ||
     rowNumber == columns ||

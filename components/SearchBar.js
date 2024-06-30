@@ -21,21 +21,18 @@ export default function SearchBar({
     if (currentTrainIn3) {
       currentTrain = currentTrainIn3;
       currentTrainIndex = trainsArrayFor3by3.indexOf(currentTrain);
-      console.log("currentTrain", currentTrain);
-      console.log("currentTrainIndex", currentTrainIndex);
-      //anhand des trainIndex den Array Index herausfinden
+      //check which grid the currentTrain belongs to
       const arrayIndex = Math.ceil(currentTrainIndex / 9);
       scrollToSection(arrayIndex);
     } else if (currentTrainIn4) {
       currentTrain = currentTrainIn4;
       currentTrainIndex = trainsArrayFor4by4.indexOf(currentTrain);
-      console.log("currentTrain", currentTrain);
-      console.log("currentTrainIndex", currentTrainIndex);
-      //anhand des trainIndex den Array Index herausfinden
+      //check which grid the currentTrain belongs to
+      //add the value 10 for 11 3x3 grids (indices 0-10)
       const arrayIndex = Math.ceil(currentTrainIndex / 16) + 10;
-      console.log("arrayIndex", arrayIndex);
       scrollToSection(arrayIndex);
     } else if (!currentTrainIn3 && !currentTrainIn4) {
+      //hier kann noch ein Hinweis für den User hin
       console.log("not found");
     } else {
       return;
@@ -47,9 +44,6 @@ export default function SearchBar({
     <StyledSearchBar onSubmit={() => searchTrain(event)}>
       <input name="searchedTrain"></input>
       <button type="submit">suchen</button>
-      <button type="button" onClick={scrollToSection}>
-        scroll
-      </button>
     </StyledSearchBar>
   );
 }
