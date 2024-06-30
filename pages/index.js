@@ -4,6 +4,7 @@ import styled from "styled-components";
 import useLocalStorageState from "use-local-storage-state";
 import dynamic from "next/dynamic";
 import { toggleSeen, splitUpInChunks } from "../helpers/bingoFunctions";
+import SearchBar from "../components/SearchBar";
 
 export default function Home() {
   //total 227 trains
@@ -47,10 +48,9 @@ export default function Home() {
     setCelebration(false);
   }
 
-  console.log("celebration", celebration);
-
   return (
     <>
+      <SearchBar />
       {celebration && (
         <>
           <Confetti

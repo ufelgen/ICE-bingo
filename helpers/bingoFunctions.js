@@ -49,6 +49,17 @@ export function toggleSeen(
   );
 }
 
+export function determineCurrentSetNumber(gridNumber, position) {
+  // i is 11 because there are 11 3-grids and 8 4-grids
+  for (let i = 1; i <= 11; i++) {
+    let currentSetInFor = 0;
+    if (position <= i * gridNumber ** 2) {
+      currentSetInFor = i;
+      return currentSetInFor;
+    }
+  }
+}
+
 export function checkForBingo(
   currentIndex,
   updatedTrainArray,
@@ -57,32 +68,22 @@ export function checkForBingo(
 ) {
   const position = currentIndex + 1;
 
-  function determineCurrentSetNumber() {
-    for (let i = 1; i <= 11; i++) {
-      let currentSetInFor = 0;
-      if (position <= i * gridNumber * gridNumber) {
-        currentSetInFor = i;
-        return currentSetInFor;
-      }
-    }
-  }
-
-  const currentSetNumber = determineCurrentSetNumber();
+  const currentSetNumber = determineCurrentSetNumber(gridNumber, position);
 
   const currentSet = updatedTrainArray.slice(
-    gridNumber * gridNumber * currentSetNumber - gridNumber * gridNumber,
-    gridNumber * gridNumber * currentSetNumber
+    gridNumber ** 2 * currentSetNumber - gridNumber ** 2,
+    gridNumber ** 2 * currentSetNumber
   );
 
   const currentSetArray = splitUpInChunks(currentSet, gridNumber);
   console.log("currentSetArray", currentSetArray);
 
   function determinePositionInCurrentSet() {
-    for (let i = 1; i <= gridNumber * gridNumber; i++) {
+    for (let i = 1; i <= gridNumber ** 2; i++) {
       let positionInCurrentSetInFor = 0;
       if (
         position ===
-        currentSetNumber * gridNumber * gridNumber - gridNumber * gridNumber + i
+        currentSetNumber * gridNumber ** 2 - gridNumber ** 2 + i
       ) {
         positionInCurrentSetInFor = i;
         return positionInCurrentSetInFor;
