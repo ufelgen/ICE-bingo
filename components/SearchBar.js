@@ -1,13 +1,55 @@
 import styled from "styled-components";
 
-export default function SearchBar() {
-  function searchTrain() {
-    //repurpose find train
+export default function SearchBar({
+  trainsArrayFor3by3,
+  trainsArrayFor4by4,
+  scrollToSection,
+}) {
+  function searchTrain(event) {
+    event.preventDefault();
+    const searchedTrain = event.target.elements.searchedTrain.value;
+    let currentTrain = {};
+    let currentTrainIndex = 0;
+    const currentTrainIn3 = trainsArrayFor3by3.find(
+      (train) => train.name == searchedTrain
+    );
+
+    const currentTrainIn4 = trainsArrayFor4by4.find(
+      (train) => train.name == searchedTrain
+    );
+
+    if (currentTrainIn3) {
+      currentTrain = currentTrainIn3;
+      currentTrainIndex = trainsArrayFor3by3.indexOf(currentTrain);
+      console.log("currentTrain", currentTrain);
+      console.log("currentTrainIndex", currentTrainIndex);
+      //anhand des trainIndex den Array Index herausfinden
+      const arrayIndex = Math.ceil(currentTrainIndex / 9);
+      scrollToSection(arrayIndex);
+    } else if (currentTrainIn4) {
+      currentTrain = currentTrainIn4;
+      currentTrainIndex = trainsArrayFor4by4.indexOf(currentTrain);
+      console.log("currentTrain", currentTrain);
+      console.log("currentTrainIndex", currentTrainIndex);
+      //anhand des trainIndex den Array Index herausfinden
+      const arrayIndex = Math.ceil(currentTrainIndex / 16) + 10;
+      console.log("arrayIndex", arrayIndex);
+      scrollToSection(arrayIndex);
+    } else if (!currentTrainIn3 && !currentTrainIn4) {
+      console.log("not found");
+    } else {
+      return;
+    }
+    event.target.reset();
   }
+
   return (
-    <StyledSearchBar onSubmit={searchTrain}>
-      <input></input>
+    <StyledSearchBar onSubmit={() => searchTrain(event)}>
+      <input name="searchedTrain"></input>
       <button type="submit">suchen</button>
+      <button type="button" onClick={scrollToSection}>
+        scroll
+      </button>
     </StyledSearchBar>
   );
 }

@@ -30,17 +30,6 @@ export function toggleSeen(
   });
 
   setterFunction(updatedTrainArray);
-  /*   if (gridNumber === 3) {
-    checkForBingo(
-      currentTrainIndex,
-      updatedTrainArray,
-      celebrationFunction,
-      gridNumber
-    );
-  } else if (gridNumber === 4) {
-    //checkForBingoIn4x4();
-    console.log("huhu testi");
-  } */
   checkForBingo(
     currentTrainIndex,
     updatedTrainArray,

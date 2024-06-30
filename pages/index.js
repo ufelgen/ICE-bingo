@@ -1,5 +1,5 @@
 import { shuffledTrains } from "../lib/shuffledTrains";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useRef } from "react";
 import styled from "styled-components";
 import useLocalStorageState from "use-local-storage-state";
 import dynamic from "next/dynamic";
@@ -48,9 +48,20 @@ export default function Home() {
     setCelebration(false);
   }
 
+  const sectionRefs = useRef([]);
+
+  const scrollToSection = (index) => {
+    sectionRefs.current[index].scrollIntoView({ behavior: "smooth" });
+    console.log("index", index);
+  };
+
   return (
     <>
-      <SearchBar />
+      <SearchBar
+        trainsArrayFor3by3={trainsArrayFor3by3}
+        trainsArrayFor4by4={trainsArrayFor4by4}
+        scrollToSection={scrollToSection}
+      />
       {celebration && (
         <>
           <Confetti
@@ -68,8 +79,11 @@ export default function Home() {
           />
         </>
       )}
-      {finalArrayForThreeGrid.map((arrayOf3x3Trains) => (
-        <ThreeGrid key={arrayOf3x3Trains[0][0].name}>
+      {finalArrayForThreeGrid.map((arrayOf3x3Trains, index) => (
+        <ThreeGrid
+          key={arrayOf3x3Trains[0][0].name}
+          ref={(el) => (sectionRefs.current[index] = el)}
+        >
           {arrayOf3x3Trains.map((array) => (
             <Fragment key={array[0].name}>
               {array.map((train) => (
@@ -77,6 +91,7 @@ export default function Home() {
                   key={train.id}
                   type="button"
                   className={train.isSeen ? "isSeen" : ""}
+                  id={train.id}
                   onClick={() =>
                     toggleSeen(
                       train.id,
@@ -94,8 +109,13 @@ export default function Home() {
           ))}
         </ThreeGrid>
       ))}
-      {finalArrayForFourGrid.map((arrayOf4x4Trains) => (
-        <FourGrid key={arrayOf4x4Trains[0][0].name}>
+      {finalArrayForFourGrid.map((arrayOf4x4Trains, index) => (
+        <FourGrid
+          key={arrayOf4x4Trains[0][0].name}
+          ref={(el) =>
+            (sectionRefs.current[index + finalArrayForThreeGrid.length] = el)
+          }
+        >
           {arrayOf4x4Trains.map((array) => (
             <Fragment key={array[0].name}>
               {array.map((train) => (
