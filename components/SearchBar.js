@@ -53,17 +53,18 @@ export default function SearchBar({
 }
 
 const StyledSearchBar = styled.form`
+  position: fixed;
+  top: 0;
   display: grid;
   grid-template-columns: 4fr 1fr;
-  height: 10 vh;
+  height: 7vh;
+  width: 90%;
   background-color: red;
-  margin: 2vw;
+  margin: 0.5rem 2vw 0.5rem 2vw;
   padding: 0.5rem;
-  margin: 0.5rem;
   border: 1px solid red;
   border-radius: 5px;
   gap: 0.5rem;
-  width: 100%;
 
   input {
     border-radius: 5px;

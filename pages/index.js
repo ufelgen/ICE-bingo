@@ -41,7 +41,7 @@ export default function Home() {
   function handleCelebration() {
     setCelebration(true);
     setTimeout(handleConfettiStop, 5000);
-    console.log(window.scrollY);
+    //console.log(window.scrollY);
   }
 
   function handleConfettiStop() {
@@ -55,7 +55,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <Main>
       <SearchBar
         trainsArrayFor3by3={trainsArrayFor3by3}
         trainsArrayFor4by4={trainsArrayFor4by4}
@@ -78,70 +78,86 @@ export default function Home() {
           />
         </>
       )}
-      {finalArrayForThreeGrid.map((arrayOf3x3Trains, index) => (
-        <ThreeGrid
-          key={arrayOf3x3Trains[0][0].name}
-          ref={(el) => (sectionRefs.current[index] = el)}
-        >
-          {arrayOf3x3Trains.map((array) => (
-            <Fragment key={array[0].name}>
-              {array.map((train) => (
-                <button
-                  key={train.id}
-                  type="button"
-                  className={train.isSeen ? "isSeen" : ""}
-                  id={train.id}
-                  onClick={() =>
-                    toggleSeen(
-                      train.id,
-                      setTrainsArrayFor3by3,
-                      trainsArrayFor3by3,
-                      3,
-                      handleCelebration
-                    )
-                  }
-                >
-                  {train.name}
-                </button>
-              ))}
-            </Fragment>
-          ))}
-        </ThreeGrid>
-      ))}
-      {finalArrayForFourGrid.map((arrayOf4x4Trains, index) => (
-        <FourGrid
-          key={arrayOf4x4Trains[0][0].name}
-          ref={(el) =>
-            (sectionRefs.current[index + finalArrayForThreeGrid.length] = el)
-          }
-        >
-          {arrayOf4x4Trains.map((array) => (
-            <Fragment key={array[0].name}>
-              {array.map((train) => (
-                <button
-                  key={train.id}
-                  type="button"
-                  onClick={() =>
-                    toggleSeen(
-                      train.id,
-                      setTrainsArrayFor4by4,
-                      trainsArrayFor4by4,
-                      4,
-                      handleCelebration
-                    )
-                  }
-                  className={train.isSeen ? "isSeen" : ""}
-                >
-                  {train.name}
-                </button>
-              ))}
-            </Fragment>
-          ))}
-        </FourGrid>
-      ))}
-    </>
+      <GridContainer>
+        {finalArrayForThreeGrid.map((arrayOf3x3Trains, index) => (
+          <ThreeGrid
+            key={arrayOf3x3Trains[0][0].name}
+            ref={(el) => (sectionRefs.current[index] = el)}
+          >
+            {arrayOf3x3Trains.map((array) => (
+              <Fragment key={array[0].name}>
+                {array.map((train) => (
+                  <button
+                    key={train.id}
+                    type="button"
+                    className={train.isSeen ? "isSeen" : ""}
+                    id={train.id}
+                    onClick={() =>
+                      toggleSeen(
+                        train.id,
+                        setTrainsArrayFor3by3,
+                        trainsArrayFor3by3,
+                        3,
+                        handleCelebration
+                      )
+                    }
+                  >
+                    {train.name}
+                  </button>
+                ))}
+              </Fragment>
+            ))}
+          </ThreeGrid>
+        ))}
+        {finalArrayForFourGrid.map((arrayOf4x4Trains, index) => (
+          <FourGrid
+            key={arrayOf4x4Trains[0][0].name}
+            ref={(el) =>
+              (sectionRefs.current[index + finalArrayForThreeGrid.length] = el)
+            }
+          >
+            {arrayOf4x4Trains.map((array) => (
+              <Fragment key={array[0].name}>
+                {array.map((train) => (
+                  <button
+                    key={train.id}
+                    type="button"
+                    onClick={() =>
+                      toggleSeen(
+                        train.id,
+                        setTrainsArrayFor4by4,
+                        trainsArrayFor4by4,
+                        4,
+                        handleCelebration
+                      )
+                    }
+                    className={train.isSeen ? "isSeen" : ""}
+                  >
+                    {train.name}
+                  </button>
+                ))}
+              </Fragment>
+            ))}
+          </FourGrid>
+        ))}
+      </GridContainer>
+    </Main>
   );
 }
+
+const Main = styled.main`
+  position: relative;
+  background-color: purple;
+  width: 100vw;
+`;
+
+const GridContainer = styled.section`
+  position: fixed;
+  top: 10vh;
+  bottom: 2vh;
+  overflow-y: scroll;
+  width: 100%;
+`;
 
 const ThreeGrid = styled.section`
   display: grid;
@@ -153,15 +169,16 @@ const ThreeGrid = styled.section`
   border: 1px solid red;
   border-radius: 5px;
   background-color: lightgrey;
-  width: 100%;
-
+  width: 90vw;
+  height: 90vw;
   button {
     border: none;
     border-radius: 5px;
     background-color: white;
     color: red;
-    height: 30vw;
-    width: 30vw;
+    width: 25vw;
+    height: 25vw;
+    hyphens: auto;
     &:hover {
       color: black;
     }
