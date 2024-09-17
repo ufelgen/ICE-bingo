@@ -195,7 +195,7 @@ const FourGrid = styled(ThreeGrid)`
   grid-template: repeat(4, 1fr) / repeat(4, 1fr);
 
   button {
-    height: 22vw;
-    width: 22vw;
+    height: 20vw;
+    width: 20vw;
   }
 `;
