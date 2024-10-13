@@ -15,11 +15,12 @@ export default function Home() {
   const trainsArrayFor4by4PRE = shuffledTrains.slice(99, 227);
 
   const [celebration, setCelebration] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+
   const [trainsArrayFor3by3, setTrainsArrayFor3by3] = useLocalStorageState(
     "trainsArrayFor3by3",
     { defaultValue: trainsArrayFor3by3PRE }
   );
-
   const [trainsArrayFor4by4, setTrainsArrayFor4by4] = useLocalStorageState(
     "trainsArrayFor4by4",
     { defaultValue: trainsArrayFor4by4PRE }
@@ -60,6 +61,8 @@ export default function Home() {
         trainsArrayFor3by3={trainsArrayFor3by3}
         trainsArrayFor4by4={trainsArrayFor4by4}
         scrollToSection={scrollToSection}
+        notFound={notFound}
+        setNotFound={setNotFound}
       />
       {celebration && (
         <>
@@ -147,7 +150,6 @@ export default function Home() {
 
 const Main = styled.main`
   position: relative;
-  background-color: purple;
   width: 100vw;
 `;
 

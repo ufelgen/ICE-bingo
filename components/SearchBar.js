@@ -4,6 +4,8 @@ export default function SearchBar({
   trainsArrayFor3by3,
   trainsArrayFor4by4,
   scrollToSection,
+  notFound,
+  setNotFound,
 }) {
   function searchTrain(event) {
     event.preventDefault();
@@ -36,7 +38,8 @@ export default function SearchBar({
       console.log("arrayIndex", arrayIndex);
       scrollToSection(arrayIndex);
     } else if (!currentTrainIn3 && !currentTrainIn4) {
-      //hier kann noch ein Hinweis für den User hin
+      setNotFound(true);
+      setTimeout(handleStop, 3000);
       console.log("not found");
     } else {
       return;
@@ -44,7 +47,15 @@ export default function SearchBar({
     event.target.reset();
   }
 
-  return (
+  function handleStop() {
+    setNotFound(false);
+  }
+
+  return notFound ? (
+    <>
+      <NotFoundBox>Zugname nicht gefunden</NotFoundBox>
+    </>
+  ) : (
     <StyledSearchBar onSubmit={() => searchTrain(event)}>
       <input name="searchedTrain"></input>
       <button type="submit">suchen</button>
@@ -76,4 +87,13 @@ const StyledSearchBar = styled.form`
     border: 1px solid black;
     border-radius: 5px;
   }
+`;
+
+const NotFoundBox = styled.p`
+  margin: 0.5rem 2vw 0.5rem 2vw;
+  padding: 0.5rem;
+  color: red;
+  background-color: lightgrey;
+  border: 1px solid black;
+  border-radius: 5px;
 `;
