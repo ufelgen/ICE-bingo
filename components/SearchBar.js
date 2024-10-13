@@ -9,15 +9,16 @@ export default function SearchBar({
 }) {
   function searchTrain(event) {
     event.preventDefault();
-    const searchedTrain = event.target.elements.searchedTrain.value;
+    const searchedTrain =
+      event.target.elements.searchedTrain.value.toLowerCase();
     let currentTrain = {};
     let currentTrainIndex = 0;
-    const currentTrainIn3 = trainsArrayFor3by3.find(
-      (train) => train.name == searchedTrain
-    );
 
-    const currentTrainIn4 = trainsArrayFor4by4.find(
-      (train) => train.name == searchedTrain
+    const currentTrainIn3 = trainsArrayFor3by3.find((train) =>
+      train.name.toLowerCase().includes(searchedTrain)
+    );
+    const currentTrainIn4 = trainsArrayFor4by4.find((train) =>
+      train.name.toLowerCase().includes(searchedTrain)
     );
 
     if (currentTrainIn3) {
