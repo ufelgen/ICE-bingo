@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { toggleSeen, splitUpInChunks } from "../helpers/bingoFunctions";
 import SearchBar from "../components/SearchBar";
 import ExportDataOption from "../components/Export";
+import { BsFillArrowUpCircleFill } from "react-icons/bs";
 
 export default function Home() {
   //total 227 trains
@@ -54,6 +55,10 @@ export default function Home() {
 
   function scrollToSection(index) {
     sectionRefs.current[index].scrollIntoView({ behavior: "smooth" });
+  }
+
+  function scrollToTop() {
+    sectionRefs.current[0].scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -149,6 +154,11 @@ export default function Home() {
           </FourGrid>
         ))}
       </GridContainer>
+      <TopButtonBox>
+        <TopButton onClick={scrollToTop}>
+          <BsFillArrowUpCircleFill size="7vh" color="darkgrey" />
+        </TopButton>
+      </TopButtonBox>
     </Main>
   );
 }
@@ -162,7 +172,7 @@ const GridContainer = styled.section`
   position: fixed;
   top: 10vh;
   bottom: 2vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   width: 100%;
 `;
 
@@ -205,4 +215,23 @@ const FourGrid = styled(ThreeGrid)`
     height: 20vw;
     width: 20vw;
   }
+`;
+
+const TopButtonBox = styled.div`
+  width: 100%;
+  max-width: 800px;
+  position: fixed;
+  bottom: 8vh;
+`;
+
+const TopButton = styled.button`
+  position: absolute;
+  bottom: 0;
+  right: 1.5rem;
+  text-decoration: none;
+  background-color: transparent;
+  border-radius: 50%;
+  height: 7vh;
+  width: 7vh;
+  border: none;
 `;

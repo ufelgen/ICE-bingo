@@ -27,12 +27,10 @@ export default function ExportDataOption({
 
   async function importData(event) {
     if (event.target.files) {
-      const parsedData = await readJsonFile(event.target.files[0]);
-      //const parsedData = JSON.parse(jsonData);
+      const trainData = await readJsonFile(event.target.files[0]);
 
-      console.log("3by3", JSON.parse(parsedData.trainsArrayFor3by3));
-      setTrainsArrayFor3by3(JSON.parse(parsedData.trainsArrayFor3by3));
-      setTrainsArrayFor4by4(JSON.parse(parsedData.trainsArrayFor4by4));
+      setTrainsArrayFor3by3(JSON.parse(trainData.trainsArrayFor3by3));
+      setTrainsArrayFor4by4(JSON.parse(trainData.trainsArrayFor4by4));
 
       event.target.value = "";
     }
