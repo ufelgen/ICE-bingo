@@ -5,6 +5,7 @@ import useLocalStorageState from "use-local-storage-state";
 import dynamic from "next/dynamic";
 import { toggleSeen, splitUpInChunks } from "../helpers/bingoFunctions";
 import SearchBar from "../components/SearchBar";
+import ExportDataOption from "../components/Export";
 
 export default function Home() {
   //total 227 trains
@@ -82,6 +83,10 @@ export default function Home() {
         </>
       )}
       <GridContainer>
+        <ExportDataOption
+          setTrainsArrayFor3by3={setTrainsArrayFor3by3}
+          setTrainsArrayFor4by4={setTrainsArrayFor4by4}
+        />
         {finalArrayForThreeGrid.map((arrayOf3x3Trains, index) => (
           <ThreeGrid
             key={arrayOf3x3Trains[0][0].name}
