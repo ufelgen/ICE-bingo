@@ -6,8 +6,8 @@ export default function ExportDataOption({
   setTrainsArrayFor4by4,
 }) {
   function exportData() {
-    const trainsData3x3 = localStorage.getItem("trainsArrayFor3by3");
-    const trainsData4x4 = localStorage.getItem("trainsArrayFor4by4");
+    const trainsData3x3 = localStorage.getItem("trainsArrayFor3by3") || "[]";
+    const trainsData4x4 = localStorage.getItem("trainsArrayFor4by4") || "[]";
     const trainsData = {
       trainsArrayFor3by3: trainsData3x3,
       trainsArrayFor4by4: trainsData4x4,
@@ -15,22 +15,37 @@ export default function ExportDataOption({
 
     const today = format(new Date(), "yyyy-MM-dd");
 
-    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+    const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(trainsData)
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
     link.download = `${today}_ICE-bingo.json`;
 
-    link.click();
+    if (document.body) {
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 
   async function importData(event) {
     if (event.target.files) {
       const trainData = await readJsonFile(event.target.files[0]);
 
-      setTrainsArrayFor3by3(JSON.parse(trainData.trainsArrayFor3by3));
-      setTrainsArrayFor4by4(JSON.parse(trainData.trainsArrayFor4by4));
+      const confirmation = confirm(
+        "Willst du die bisher gespeicherten Daten ersetzen? Dieser Vorgang kann nicht rückgängig gemacht werden. Du kannst deine aktuellen ICE-Bingo-Daten aber vorher exportieren."
+      );
+      if (confirmation) {
+        if (trainData.trainsArrayFor3by3 && trainData.trainsArrayFor4by4) {
+          setTrainsArrayFor3by3(JSON.parse(trainData.trainsArrayFor3by3));
+          setTrainsArrayFor4by4(JSON.parse(trainData.trainsArrayFor4by4));
+        } else {
+          alert(
+            "Da hat etwas nicht funktioniert. Überprüfe bitte die hochgeladene Datei."
+          );
+        }
+      }
 
       event.target.value = "";
     }
@@ -46,11 +61,15 @@ export default function ExportDataOption({
         }
       };
 
-      fileReader.onerror = (error) => reject(error);
+      fileReader.onerror = (error) => {
+        console.error("Fehler beim Lesen der Datei:", error);
+        alert("Fehler: Die Datei konnte nicht gelesen werden.");
+        reject(error);
+      };
       fileReader.readAsText(file);
     });
   }
-  // huhu testi
+
   return (
     <>
       <button onClick={exportData}>export</button>
