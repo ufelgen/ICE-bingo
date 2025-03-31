@@ -71,13 +71,29 @@ export default function ExportDataOption({
   }
 
   return (
-    <>
-      <button onClick={exportData}>export</button>
+    <ExportImportField>
+      <button onClick={exportData}>Daten exportieren</button>
+      <label htmlFor="import">Daten importieren:</label>
       <input
         type="file"
         accept=".json,application/json"
         onChange={importData}
+        id="import"
+        name="import"
       />
-    </>
+    </ExportImportField>
   );
 }
+
+const ExportImportField = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center; //justify-content: space-around;
+
+  button {
+    border: 1px solid red;
+    border-radius: 5px;
+    width: 70vw;
+    margin-bottom: 1rem;
+  }
+`;
